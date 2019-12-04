@@ -1,3 +1,16 @@
+function traversePoint(distance, i, j) {
+  for (let index = 0; index < distance; index++) {
+    markTraversed(i, j, count);
+    grid.set(`${i} ${j}`, count);
+    i++;
+    count++;
+  }
+}
+
+markTraversed(i,j,count) {
+  grid.set(`${i} ${j}`, count);
+}
+
 function linePath(points1, points2) {
   let grid = new Map();
   let i = 0;
@@ -5,7 +18,7 @@ function linePath(points1, points2) {
   let count = 0;
   points1.split(",").map(point => {
     const direction = point[0];
-    const val = +point.slice(1, point.length);
+    const distance = +point.slice(1, point.length);
     switch (direction) {
       case "R":
         for (let z = 0; z < val; z++) {
