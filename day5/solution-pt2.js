@@ -7,19 +7,41 @@ function getValue(mode, arr, index) {
   }
 }
 
+const INSTRUCTION = {
+  ADDITION: 1,
+  MULTIPLICATION: 2,
+  INPUT: 3,
+  OUTPUT: 4,
+  JUMP_IF_TRUE: 5,
+  JUMP_IF_FALSE: 6,
+  LESS_THAN: 7,
+  EQUALS: 8
+};
+
+const MODE = {
+  POSITION: 0,
+  IMMEDIATE: 1
+};
+
+const DEFAULT_MODE = MODE.POSITION;
+
 function programAlarm(arr) {
   let i = 0;
+
   processOpcode: while (true) {
     let opCode;
-    let inp1 = 0,
-      inp2 = 0,
-      out1 = 0;
+    let inp1 = DEFAULT_MODE,
+      inp2 = DEFAULT_MODE,
+      out1 = DEFAULT_MODE;
+
     if (arr[i] === 99) {
       break;
     }
     if (("" + arr[i]).length > 1) {
       opCode = arr[i] % 100;
-      [inp1 = 0, inp2 = 0, out1 = 0] = ("" + Math.floor(arr[i] / 100))
+      [inp1 = DEFAULT_MODE, inp2 = DEFAULT_MODE, out1 = DEFAULT_MODE] = (
+        "" + Math.floor(arr[i] / 100)
+      )
         .split("")
         .reverse()
         .map(Number);
@@ -32,22 +54,22 @@ function programAlarm(arr) {
     let assignmentIndex = out1 ? i + 3 : arr[i + 3];
 
     switch (opCode) {
-      case 1:
+      case INSTRUCTION.ADDITION:
         arr[assignmentIndex] = firstVal + secondVal;
         i += 4;
         break;
 
-      case 2:
+      case INSTRUCTION.MULTIPLICATION:
         arr[assignmentIndex] = firstVal * secondVal;
         i += 4;
         break;
 
-      case 3:
+      case INSTRUCTION.INPUT:
         arr[arr[i + 1]] = 5;
         i += 2;
         break;
 
-      case 4:
+      case INSTRUCTION.OUTPUT:
         if (getValue(inp1, arr, i + 1) === 0) {
           i += 2;
         } else {
@@ -56,7 +78,7 @@ function programAlarm(arr) {
         }
         break;
 
-      case 5:
+      case INSTRUCTION.JUMP_IF_TRUE:
         if (firstVal !== 0) {
           i = secondVal;
         } else {
@@ -64,7 +86,7 @@ function programAlarm(arr) {
         }
         break;
 
-      case 6:
+      case INSTRUCTION.JUMP_IF_FALSE:
         if (firstVal === 0) {
           i = secondVal;
         } else {
@@ -72,7 +94,7 @@ function programAlarm(arr) {
         }
         break;
 
-      case 7:
+      case INSTRUCTION.LESS_THAN:
         if (firstVal < secondVal) {
           arr[assignmentIndex] = 1;
         } else {
@@ -81,7 +103,7 @@ function programAlarm(arr) {
         i += 4;
         break;
 
-      case 8:
+      case INSTRUCTION.EQUALS:
         if (firstVal === secondVal) {
           arr[assignmentIndex] = 1;
         } else {
