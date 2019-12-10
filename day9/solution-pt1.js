@@ -14,7 +14,7 @@ function getValue(mode, arr, index) {
       if (relative_index < 0) {
         console.log("WTF dude");
       }
-      return arr[relative_index];
+      return arr[relative_index] || 0;
   }
 }
 
@@ -139,7 +139,7 @@ function programAlarm(arr) {
         break;
 
       case INSTRUCTION.RELATIVE_BASE_OFFSET:
-        relative_base += arr[i + 1];
+        relative_base += firstVal;
         i += 2;
         break;
     }
